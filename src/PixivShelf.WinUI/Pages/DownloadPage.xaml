@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PixivShelf.Pages.DownloadPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer x:Name="RootScroll" HorizontalContentAlignment="Center" HorizontalScrollBarVisibility="Disabled">
+        <Grid x:Name="ContentRoot" Padding="24" ColumnSpacing="16" MaxWidth="1280" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="280" />
+            </Grid.ColumnDefinitions>
+
+            <!-- 左栏：来源 + 输入 + 操作 -->
+            <Border Grid.Column="0" VerticalAlignment="Top"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="8" Padding="16">
+                <StackPanel Spacing="14">
+
+                    <StackPanel Orientation="Horizontal" Spacing="20">
+                        <RadioButton x:Name="SourcePid" Content="PID" GroupName="source" IsChecked="True" Checked="OnSourceChanged" />
+                        <RadioButton x:Name="SourceArtist" Content="画师" GroupName="source" Checked="OnSourceChanged" />
+                        <RadioButton x:Name="SourceBookmarks" Content="我的收藏" GroupName="source" Checked="OnSourceChanged" />
+                    </StackPanel>
+
+                    <!-- PID / 画师 共用输入框；我的收藏时隐藏 -->
+                    <StackPanel x:Name="InputPanel" Spacing="6">
+                        <TextBox x:Name="PasteBox" AcceptsReturn="True" TextWrapping="Wrap" Height="120"
+                                 MinWidth="420"
+                                 FontFamily="Consolas"
+                                 PlaceholderText="输入插画&amp;画师ID，或者链接"
+                                 TextChanged="OnPasteChanged" />
+                        <TextBlock x:Name="ParseInfo" Text="" Style="{StaticResource CaptionTextBlockStyle}" />
+                    </StackPanel>
+
+                    <!-- 我的收藏：提示 + 全部/公开/私密（与上方来源选择同款单选） -->
+                    <StackPanel x:Name="BookmarkOptions" Spacing="8" Visibility="Collapsed">
+                        <TextBlock Text="下载所有收藏图片" Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <StackPanel Orientation="Horizontal" Spacing="20">
+                            <RadioButton x:Name="RestAll" Content="全部" GroupName="bookmarkRest"
+                                         IsChecked="True" Checked="OnBookmarkRestChanged" />
+                            <RadioButton x:Name="RestPublic" Content="公开" GroupName="bookmarkRest"
+                                         Checked="OnBookmarkRestChanged" />
+                            <RadioButton x:Name="RestPrivate" Content="私密" GroupName="bookmarkRest"
+                                         Checked="OnBookmarkRestChanged" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="PreviewButton" Content="预览" Click="OnPreview" />
+                        <Button x:Name="StartButton" Content="下载" Style="{StaticResource AccentButtonStyle}" Click="OnStart" />
+                    </StackPanel>
+
+                    <TextBlock x:Name="PreviewText" Text="" TextWrapping="Wrap" />
+                    <ProgressBar x:Name="ProgressBar" Maximum="1" Value="0" Visibility="Collapsed" />
+
+                </StackPanel>
+            </Border>
+
+            <!-- 右栏：内容范围（页面一级区域，常驻） -->
+            <Border Grid.Column="1" VerticalAlignment="Top"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="8" Padding="16">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="内容范围" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <Border Height="1" Background="{ThemeResource CardStrokeColorDefaultBrush}" />
+
+                    <StackPanel Spacing="10">
+                        <RadioButton x:Name="ScopeAll" Content="所有" GroupName="scope" Checked="OnScopeChanged" />
+                        <RadioButton x:Name="ScopeSkipR18" Content="全年龄" GroupName="scope" Checked="OnScopeChanged" />
+                        <RadioButton x:Name="ScopeR18Only" Content="成人内容" GroupName="scope" Checked="OnScopeChanged" />
+                    </StackPanel>
+
+                    <Border Height="1" Background="{ThemeResource CardStrokeColorDefaultBrush}" />
+                    <ToggleSwitch x:Name="SkipAiSwitch" Header="屏蔽 AI" Toggled="OnSkipAiToggled" />
+                    <ToggleSwitch x:Name="BlockR18GSwitch" Header="屏蔽 R18G" Toggled="OnBlockR18GToggled" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</Page>

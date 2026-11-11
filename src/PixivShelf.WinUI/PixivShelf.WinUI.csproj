@@ -1,0 +1,97 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>PixivShelf</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWinUI>true</UseWinUI>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>PixivShelf</AssemblyName>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\app.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\app.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\docs\portable-readme.txt" Link="data\README.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 只引用真正需要的子包：元包会顺带塞进 AI/ML/Search/Widgets（约 50MB）。 -->
+    <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.6.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.6.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.DWrite" Version="2.6.5" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PixivShelf.Core\PixivShelf.Core.csproj" />
+  </ItemGroup>
+
+  <!--
+    dotnet publish does not copy two things WinUI needs at runtime:
+      - the app's own resources.pri  -> XAML resource lookup fails (0x80070002)
+      - the compiled XAML (*.xbf)    -> UI crashes on startup in Microsoft.UI.Xaml.dll
+    Copy both explicitly after publish.
+  -->
+  <Target Name="CopyPortableReadme" AfterTargets="Publish">
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\..\docs\portable-readme.txt"
+          DestinationFiles="$(PublishDir)README.txt"
+          SkipUnchangedFiles="true"
+          Condition="Exists('$(MSBuildProjectDirectory)\..\..\docs\portable-readme.txt')" />
+  </Target>
+
+  <Target Name="IncludeWinUIResourcesInPublish" AfterTargets="Publish">
+    <Copy SourceFiles="$(TargetDir)$(AssemblyName).pri"
+          DestinationFolder="$(PublishDir)"
+          SkipUnchangedFiles="true"
+          Condition="Exists('$(TargetDir)$(AssemblyName).pri')" />
+
+    <ItemGroup>
+      <_XbfToPublish Include="$(TargetDir)**\*.xbf" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_XbfToPublish)"
+          DestinationFiles="@(_XbfToPublish->'$(PublishDir)%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true"
+          Condition="'@(_XbfToPublish)' != ''" />
+  </Target>
+
+  <!--
+    Shave the publish output:
+      - Microsoft.DiaSymReader.Native.amd64.dll is only used to read PDBs
+      - *.pdb are debug symbols
+      - WinAppSDK ships ~150 locale folders; this tool only ships Simplified Chinese
+  -->
+  <Target Name="SlimPublishOutput" AfterTargets="Publish">
+    <ItemGroup>
+      <_TrimFiles Include="$(PublishDir)Microsoft.DiaSymReader.Native.amd64.dll" />
+      <_TrimFiles Include="$(PublishDir)**\*.pdb" />
+      <_LocaleDirs Include="$([System.IO.Directory]::GetDirectories('$(PublishDir)'))" />
+    </ItemGroup>
+
+    <Delete Files="@(_TrimFiles)" ContinueOnError="true" />
+
+    <ItemGroup>
+      <_ExtraLocaleDirs Include="@(_LocaleDirs)"
+                        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '^[a-z]{2}(-[A-Z]{2})?$'))
+                                   AND '%(Filename)' != 'zh-CN'" />
+    </ItemGroup>
+
+    <RemoveDir Directories="@(_ExtraLocaleDirs)" ContinueOnError="true" />
+  </Target>
+
+</Project>

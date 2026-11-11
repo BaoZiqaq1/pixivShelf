@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>PixivFetcher</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWinUI>true</UseWinUI>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>PixivFetcher</AssemblyName>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\app.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.6.5" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PixivFetcher.Core\PixivFetcher.Core.csproj" />
+  </ItemGroup>
+
+  <!--
+    dotnet publish does not copy two things WinUI needs at runtime:
+      - the app's own resources.pri  -> XAML resource lookup fails (0x80070002)
+      - the compiled XAML (*.xbf)    -> UI crashes on startup in Microsoft.UI.Xaml.dll
+    Copy both explicitly after publish.
+  -->
+  <Target Name="IncludeWinUIResourcesInPublish" AfterTargets="Publish">
+    <Copy SourceFiles="$(TargetDir)$(AssemblyName).pri"
+          DestinationFolder="$(PublishDir)"
+          SkipUnchangedFiles="true"
+          Condition="Exists('$(TargetDir)$(AssemblyName).pri')" />
+
+    <ItemGroup>
+      <_XbfToPublish Include="$(TargetDir)**\*.xbf" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_XbfToPublish)"
+          DestinationFiles="@(_XbfToPublish->'$(PublishDir)%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true"
+          Condition="'@(_XbfToPublish)' != ''" />
+  </Target>
+
+</Project>

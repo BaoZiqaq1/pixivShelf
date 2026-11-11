@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>PixivShelf.Core</RootNamespace>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Pinned: a floating version let the Core compile against a newer SQLite than the
+         WinUI publish copied, which crashed the app at startup (assembly not found). -->
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.33" />
+  </ItemGroup>
+
+</Project>

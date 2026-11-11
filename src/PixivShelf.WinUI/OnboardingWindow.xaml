@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="PixivShelf.OnboardingWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 顶部：步骤圆点 -->
+        <StackPanel Grid.Row="0" Padding="32,24,32,8" Spacing="14">
+            <TextBlock x:Name="StepTitle" Style="{StaticResource SubtitleTextBlockStyle}" Text="免责声明" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Ellipse x:Name="Dot1" Width="8" Height="8" Fill="{ThemeResource AccentFillColorDefaultBrush}" />
+                <Ellipse x:Name="Dot2" Width="8" Height="8" Fill="{ThemeResource ControlStrongFillColorDefaultBrush}" Opacity="0.35" />
+                <Ellipse x:Name="Dot3" Width="8" Height="8" Fill="{ThemeResource ControlStrongFillColorDefaultBrush}" Opacity="0.35" />
+                <Ellipse x:Name="Dot4" Width="8" Height="8" Fill="{ThemeResource ControlStrongFillColorDefaultBrush}" Opacity="0.35" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- 内容区 -->
+        <Grid Grid.Row="1" Padding="32,8,32,0">
+
+            <!-- ① 免责声明 -->
+            <Grid x:Name="StepDisclaimer">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="12" MaxWidth="720" HorizontalAlignment="Left">
+                        <TextBlock TextWrapping="Wrap" LineHeight="22"
+                                   Text="本工具是一个第三方的 pixiv 图片下载器，并非 pixiv 官方客户端，也未获得 pixiv 官方授权或认可。" />
+                        <TextBlock TextWrapping="Wrap" LineHeight="22"
+                                   Text="使用前请知悉并同意以下几点：" />
+                        <StackPanel Spacing="8" Margin="4,0,0,0">
+                            <TextBlock TextWrapping="Wrap" LineHeight="22" Text="· 仅用于个人学习与技术交流，请勿用于任何商业用途。" />
+                            <TextBlock TextWrapping="Wrap" LineHeight="22" Text="· 作品中所有内容的版权归原作者及 pixiv 所有，请尊重作者的劳动成果。" />
+                            <TextBlock TextWrapping="Wrap" LineHeight="22" Text="· 请合理设置下载间隔与并发数，避免对 pixiv 服务器造成不必要的压力。" />
+                            <TextBlock TextWrapping="Wrap" LineHeight="22" Text="· 下载的内容请仅限个人收藏，请勿二次传播，尤其是 R-18 / R-18G 内容。" />
+                            <TextBlock TextWrapping="Wrap" LineHeight="22" Text="· 使用本工具产生的一切后果（包括但不限于账号风险、版权纠纷）由使用者自行承担，作者不承担任何责任。" />
+                        </StackPanel>
+                        <TextBlock TextWrapping="Wrap" LineHeight="22" Margin="0,8,0,0"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="点击下方的「同意并继续」即表示你已阅读并同意以上内容。" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
+            <!-- ② 登录 -->
+            <Grid x:Name="StepLogin" Visibility="Collapsed">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="10" MaxWidth="760" HorizontalAlignment="Left">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="请确认你的网络环境能正常访问 pixiv.net。" />
+                    <TextBlock TextWrapping="Wrap"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="若不下载账号收藏，可以跳过这一步。" />
+
+                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+                        <Button Content="网页登录" Click="OnWebLogin" />
+                        <Button Content="填写 Cookie" Click="OnShowCookieInput" />
+                    </StackPanel>
+
+                    <TextBlock x:Name="LoginStatus" Text="状态：未登录"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                    <Border x:Name="CookieCard" Visibility="Collapsed"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                            CornerRadius="8" Padding="14">
+                        <StackPanel x:Name="CookiePanel" Spacing="8">
+                            <TextBlock Text="粘贴 Cookie（PHPSESSID 或整条）" FontSize="12"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <PasswordBox x:Name="OnboardingCookieBox" PasswordRevealMode="Hidden"
+                                         FontFamily="Consolas" Height="36" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Button x:Name="VerifyCookieButton" Content="验证并登录" Click="OnVerifyCookie" />
+                                <Button Content="取消" Click="OnCancelCookieInput" />
+                            </StackPanel>
+                            <TextBlock x:Name="CookieError" Text="" FontSize="12" Foreground="#E7C75A"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+
+                </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
+            <!-- ③ 下载偏好 -->
+            <Grid x:Name="StepPreferences" Visibility="Collapsed">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="12" MaxWidth="720" HorizontalAlignment="Left">
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="104" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="下载目录" VerticalAlignment="Center" FontSize="13"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBox x:Name="RootBox" Grid.Column="1" Height="36" VerticalContentAlignment="Center" />
+                        <Button Grid.Column="2" Content="选择文件夹" Height="36" Click="OnBrowseFolder" />
+                    </Grid>
+
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="104" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="文件名格式" VerticalAlignment="Center" FontSize="13"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBox x:Name="FormatBox" Grid.Column="1" Height="36" IsReadOnly="True"
+                                 VerticalContentAlignment="Center" PointerPressed="OnFormatBoxPressed" />
+                        <Button x:Name="FormatMenuButton" Grid.Column="2" Content="&#xE70D;"
+                                FontFamily="Segoe MDL2 Assets" FontSize="11" Height="36" MinWidth="44"
+                                Click="OnFormatMenuClick" />
+                    </Grid>
+                    <TextBlock x:Name="FormatSample" FontSize="12" Margin="104,0,0,0"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                    <StackPanel Spacing="10" Margin="0,4,0,0">
+                        <TextBlock Text="文件时间" FontSize="13"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <RadioButton x:Name="TimePublish" Content="用投稿时间" GroupName="ob-time" IsChecked="True" />
+                        <RadioButton x:Name="TimeBookmark" Content="用收藏时间（真实月份 + 月内推算）" GroupName="ob-time" />
+                        <ToggleSwitch x:Name="CreationSwitch" Header="修改文件日期" />
+                    </StackPanel>
+                </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
+            <!-- ④ 准备就绪 -->
+            <Grid x:Name="StepReady" Visibility="Collapsed">
+                <StackPanel x:Name="ReadyPanel" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="18">
+                    <Image x:Name="ReadyIcon" Width="96" Height="96" HorizontalAlignment="Center" />
+                    <TextBlock Text="Ciallo～(∠・ω&lt; )⌒★"
+                               FontSize="34" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                    <TextBlock Text="下载你喜爱的图片吧"
+                               FontSize="17" HorizontalAlignment="Center"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <!-- 底部按钮 -->
+        <Grid Grid.Row="2" Padding="32,16,32,24">
+            <Button x:Name="ExitButton" Content="退出" HorizontalAlignment="Left" Click="OnExit" />
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                <Button x:Name="BackButton" Content="上一步" Click="OnBack" Visibility="Collapsed" />
+                <Button x:Name="SkipButton" Content="跳过" Click="OnSkip" Visibility="Collapsed" />
+                <Button x:Name="NextButton" Content="同意并继续" Style="{StaticResource AccentButtonStyle}"
+                        Click="OnNext" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

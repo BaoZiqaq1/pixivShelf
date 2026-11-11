@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PixivShelf.Pages.TasksPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="ContentRoot" MaxWidth="1280" HorizontalAlignment="Center" Padding="24" RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="打开下载目录" Click="OnOpenFolder" />
+            <Button Content="整理已有文件…" Click="OnBackfill" />
+            <Button Content="清理旧记录" Click="OnPurge" ToolTipService.ToolTip="删除 30 天前已完成的记录" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <ListView ItemsSource="{x:Bind Tasks}" SelectionMode="None" IsItemClickEnabled="False">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="Margin" Value="0,0,0,8" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemContainerTransitions>
+                <TransitionCollection>
+                    <AddDeleteThemeTransition />
+                    <ContentThemeTransition />
+                    <ReorderThemeTransition />
+                </TransitionCollection>
+            </ListView.ItemContainerTransitions>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                            CornerRadius="8" Padding="14"
+                            PointerEntered="OnTaskCardPointerEntered"
+                            PointerMoved="OnTaskCardPointerMoved"
+                            PointerExited="OnTaskCardPointerExited">
+                        <Border.BackgroundTransition>
+                            <BrushTransition Duration="0:0:0.12" />
+                        </Border.BackgroundTransition>
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Spacing="6">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding StatusText}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                                <ProgressBar Value="{Binding Progress, Mode=OneWay}" Maximum="1"
+                                             ShowPaused="{Binding IsPaused}" ShowError="{Binding IsFailed}" />
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <TextBlock Text="{Binding Counts}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Note}" Style="{StaticResource CaptionTextBlockStyle}"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <Button Grid.Column="1" Content="{Binding ActionText}" Tag="{Binding Id}"
+                                    VerticalAlignment="Center" Click="OnTaskAction" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            </ListView>
+
+
+        </Grid>
+
+        <Grid x:Name="BusyOverlay" Grid.RowSpan="2" Visibility="Collapsed"
+              Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Opacity="0">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
+                <ProgressRing Width="36" Height="36" IsActive="True" />
+                <TextBlock Text="正在整理已有文件…" HorizontalAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

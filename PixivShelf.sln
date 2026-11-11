@@ -1,0 +1,50 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F3371496-3BAD-4430-8999-CBEF906CA8DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixivShelf.Core", "src\PixivShelf.Core\PixivShelf.Core.csproj", "{3C0043F5-628B-47DB-9B83-E1BF4A2E62FC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{DF2A3771-4CAE-4A9A-BC3A-13C8CAC3BA7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixivShelf.Tests", "tests\PixivShelf.Tests\PixivShelf.Tests.csproj", "{BF92EAC7-92E3-434B-BF86-4D4BD0E85745}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixivShelf.Cli", "src\PixivShelf.Cli\PixivShelf.Cli.csproj", "{DD90A912-FD2C-4447-93A7-3B9FB339FBD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixivShelf.WinUI", "src\PixivShelf.WinUI\PixivShelf.WinUI.csproj", "{DC82A0D8-34F9-40FE-9F44-4863D714F765}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C0043F5-628B-47DB-9B83-E1BF4A2E62FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C0043F5-628B-47DB-9B83-E1BF4A2E62FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C0043F5-628B-47DB-9B83-E1BF4A2E62FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C0043F5-628B-47DB-9B83-E1BF4A2E62FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF92EAC7-92E3-434B-BF86-4D4BD0E85745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF92EAC7-92E3-434B-BF86-4D4BD0E85745}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF92EAC7-92E3-434B-BF86-4D4BD0E85745}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF92EAC7-92E3-434B-BF86-4D4BD0E85745}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD90A912-FD2C-4447-93A7-3B9FB339FBD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD90A912-FD2C-4447-93A7-3B9FB339FBD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD90A912-FD2C-4447-93A7-3B9FB339FBD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD90A912-FD2C-4447-93A7-3B9FB339FBD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC82A0D8-34F9-40FE-9F44-4863D714F765}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{DC82A0D8-34F9-40FE-9F44-4863D714F765}.Debug|Any CPU.Build.0 = Debug|x64
+		{DC82A0D8-34F9-40FE-9F44-4863D714F765}.Release|Any CPU.ActiveCfg = Release|x64
+		{DC82A0D8-34F9-40FE-9F44-4863D714F765}.Release|Any CPU.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3C0043F5-628B-47DB-9B83-E1BF4A2E62FC} = {F3371496-3BAD-4430-8999-CBEF906CA8DB}
+		{BF92EAC7-92E3-434B-BF86-4D4BD0E85745} = {DF2A3771-4CAE-4A9A-BC3A-13C8CAC3BA7F}
+		{DD90A912-FD2C-4447-93A7-3B9FB339FBD9} = {F3371496-3BAD-4430-8999-CBEF906CA8DB}
+		{DC82A0D8-34F9-40FE-9F44-4863D714F765} = {F3371496-3BAD-4430-8999-CBEF906CA8DB}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,20 @@
+# build output
+bin/
+obj/
+dist/
+
+# local portable run folder (binaries + personal data)
+app/
+
+# user data / secrets
+data/
+config.json
+tasks.db
+tasks.db-*
+startup.log
+*.WebView2/
+
+# backups / IDE
+_backup_before_rename.zip
+.vs/
+*.user
