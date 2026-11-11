@@ -98,19 +98,19 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-installer.ps1
 
 ## 常见问题
 
-### 登录失败？
+# 登录失败？
 
 优先使用内置浏览器登录。Google 账号登录受阻时，可尝试手动粘贴 Cookie。
 
-### 下载速度慢？
+# 下载速度慢？
 
 检查网络代理，或适当调整设置中的并发数。
 
-### 程序无法启动？
+# 程序无法启动？
 
 确认已安装所需运行时。仍无法启动时，设置 `PIXIV_TRACE=1` 后重新运行，查看 `data\logs\startup.log`。
 
-### 如何初始化？
+# 如何初始化？
 
 删除 `data` 文件夹。
 
